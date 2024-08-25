@@ -7,6 +7,7 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.databinding.BindingAdapter;
 
+import java.io.Serializable;
 import java.util.Base64;
 import java.util.List;
 
@@ -16,7 +17,7 @@ import com.google.gson.annotations.SerializedName;
 import com.mastercoding.themovieapp.BR;
 
 
-public class Movie  extends BaseObservable {
+public class Movie  extends BaseObservable implements Serializable {
 
     @SerializedName("adult")
     @Expose
@@ -24,6 +25,11 @@ public class Movie  extends BaseObservable {
     @SerializedName("backdrop_path")
     @Expose
     private String backdropPath;
+    @BindingAdapter({"backdropPath"})
+    public static void loadBackImage(ImageView view, String imageUrl){
+        String path = "https://image.tmdb.org/t/p/w500/"+ imageUrl;
+        Glide.with(view.getContext()).load(path).into(view);
+    }
     @SerializedName("genre_ids")
     @Expose
     private List<Integer> genreIds;

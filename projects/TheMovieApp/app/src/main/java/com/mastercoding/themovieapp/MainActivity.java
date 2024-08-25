@@ -2,13 +2,14 @@ package com.mastercoding.themovieapp;
 
 import static com.mastercoding.themovieapp.BR.movie;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -25,7 +26,7 @@ import com.mastercoding.themovieapp.model.Movie;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements  itemClickListener{
 
     private ArrayList<Movie> movies;
     private RecyclerView recyclerView;
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
     public void getPopularMovies(){
         viewModel.getMovies().observe(this, new Observer<List<Movie>>() {
             @Override
@@ -71,10 +73,21 @@ public class MainActivity extends AppCompatActivity {
     public void displayMoviesOnRecyclerView(){
         recyclerView = binding.recyclerview;
         adapter = new MovieAdapter(this,movies);
+        adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(new GridLayoutManager(this ,2));
 
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void OnMovieClick(View v, int pos) {
+        Movie movie = movies.get(pos);
+        Intent intent = new Intent(MainActivity.this,MovieScreenActivity.class);
+        intent.putExtra("movie",movie);
+
+        startActivity(intent);
+
     }
 }
